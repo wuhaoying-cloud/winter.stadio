@@ -69,7 +69,7 @@ let targetYaw = 0;
 let yaw = 0;
 let targetPitch = 0;
 let pitch = 0;
-let lastPointerY = null;
+let lastPointer = null;
 
 function limit(value, min, max) { return Math.max(min, Math.min(max, value)); }
 
@@ -81,12 +81,12 @@ winterStage.addEventListener('pointermove', event => {
   targetY = (0.5 - y) * 68;
   targetYaw = (x - 0.5) * 7;
   targetPitch = (0.5 - y) * 4.5;
-  const pointerY = event.clientY - bounds.top;
-  if (lastPointerY !== null) {
-    // Upward pointer motion advances the camera; downward motion lets the visitor ease back.
-    targetZ = limit(targetZ + (lastPointerY - pointerY) * 1.65, 0, maxTravel);
+  const pointer = { x: event.clientX - bounds.left, y: event.clientY - bounds.top };
+  if (lastPointer) {
+    // Every cursor sweep moves the camera deeper into the passage; horizontal motion also steers.
+    targetZ = limit(targetZ + Math.hypot(pointer.x - lastPointer.x, pointer.y - lastPointer.y) * 1.25, 0, maxTravel);
   }
-  lastPointerY = pointerY;
+  lastPointer = pointer;
 });
 
 winterStage.addEventListener('wheel', event => {
