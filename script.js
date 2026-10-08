@@ -21,6 +21,11 @@ function showWinter() {
   official.hidden = true;
   winter.hidden = false;
   pending.hidden = true;
+  targetTravel = 0;
+  travel = 0;
+  targetY = 0;
+  cameraY = 0;
+  lastPointerX = null;
   window.location.hash = 'winter';
   measurePanorama();
   winterStage.focus({ preventScroll: true });
