@@ -3,8 +3,8 @@ const official = document.querySelector('#official');
 const winter = document.querySelector('#winter');
 const winterStage = document.querySelector('#winter-stage');
 const winterWorld = document.querySelector('#winter-world');
+const winterPanorama = document.querySelector('.winter-panorama');
 const winterProgress = document.querySelector('#winter-progress');
-const winterPanels = [...winterWorld.querySelectorAll('.winter-panel')];
 const pending = document.querySelector('#pending-note');
 const pendingMessage = document.querySelector('#pending-message');
 
@@ -22,6 +22,7 @@ function showWinter() {
   winter.hidden = false;
   pending.hidden = true;
   window.location.hash = 'winter';
+  measurePanorama();
   winterStage.focus({ preventScroll: true });
 }
 
@@ -58,52 +59,48 @@ document.addEventListener('keydown', event => {
   if (event.key === 'Escape') pending.hidden = true;
 });
 
-const panelStep = 1300;
-const firstPanelDepth = 520;
-const finalPanelDepth = panelStep * 3;
-const maxTravel = finalPanelDepth;
-let targetZ = 0;
-let cameraZ = 0;
-let targetX = 0;
-let cameraX = 0;
+let maxTravel = 0;
+let targetTravel = 0;
+let travel = 0;
 let targetY = 0;
 let cameraY = 0;
-let targetYaw = 0;
-let yaw = 0;
-let targetPitch = 0;
-let pitch = 0;
-let lastPointer = null;
+let lastFrame = 0;
+let lastPointerX = null;
+const limit = (value, min, max) => Math.max(min, Math.min(max, value));
 
-function limit(value, min, max) { return Math.max(min, Math.min(max, value)); }
+function measurePanorama() {
+  maxTravel = Math.max(0, winterPanorama.getBoundingClientRect().width - winterStage.clientWidth);
+  targetTravel = limit(targetTravel, 0, maxTravel);
+}
+
+winterPanorama.addEventListener('load', measurePanorama);
+window.addEventListener('resize', measurePanorama);
+if (winterPanorama.complete) measurePanorama();
 
 winterStage.addEventListener('pointermove', event => {
   const bounds = winterStage.getBoundingClientRect();
-  const x = limit((event.clientX - bounds.left) / bounds.width, 0, 1);
   const y = limit((event.clientY - bounds.top) / bounds.height, 0, 1);
-  targetX = (0.5 - x) * 96;
-  targetY = (0.5 - y) * 68;
-  targetYaw = (x - 0.5) * 7;
-  targetPitch = (0.5 - y) * 4.5;
-  const pointer = { x: event.clientX - bounds.left, y: event.clientY - bounds.top };
-  if (lastPointer) {
-    // Every cursor sweep moves the camera deeper into the passage; horizontal motion also steers.
-    targetZ = limit(targetZ + Math.hypot(pointer.x - lastPointer.x, pointer.y - lastPointer.y) * 1.25, 0, maxTravel);
+  // Rightward hand movement walks the view along this one flat panorama.
+  if (lastPointerX !== null) {
+    targetTravel = limit(targetTravel + (event.clientX - lastPointerX) * 2.2, 0, maxTravel);
   }
-  lastPointer = pointer;
+  lastPointerX = event.clientX;
+  targetY = (0.5 - y) * 5;
 });
+winterStage.addEventListener('pointerleave', () => { lastPointerX = null; });
 
 winterStage.addEventListener('wheel', event => {
   event.preventDefault();
-  targetZ = limit(targetZ + event.deltaY * 1.2, 0, maxTravel);
+  targetTravel = limit(targetTravel + (event.deltaX || event.deltaY) * 1.25, 0, maxTravel);
 }, { passive: false });
 
 winterStage.addEventListener('keydown', event => {
-  if (event.key === 'ArrowUp' || event.key === 'PageDown') {
+  if (event.key === 'ArrowRight' || event.key === 'PageDown') {
     event.preventDefault();
-    targetZ = limit(targetZ + panelStep * 0.32, 0, maxTravel);
-  } else if (event.key === 'ArrowDown' || event.key === 'PageUp') {
+    targetTravel = limit(targetTravel + winterStage.clientWidth * 0.4, 0, maxTravel);
+  } else if (event.key === 'ArrowLeft' || event.key === 'PageUp') {
     event.preventDefault();
-    targetZ = limit(targetZ - panelStep * 0.32, 0, maxTravel);
+    targetTravel = limit(targetTravel - winterStage.clientWidth * 0.4, 0, maxTravel);
   }
 });
 
@@ -127,29 +124,19 @@ seedLayout.forEach(([x, y, size, duration, drift, delay]) => {
   seedField.append(seed);
 });
 
-let lastFrame = 0;
 function animateJourney(time) {
   const elapsed = lastFrame ? Math.min((time - lastFrame) / 1000, 0.05) : 0.016;
   lastFrame = time;
-  const ease = 1 - Math.exp(-elapsed * 4.6);
-  cameraZ += (targetZ - cameraZ) * ease;
-  cameraX += (targetX - cameraX) * ease;
+  const ease = 1 - Math.exp(-elapsed * 3.8);
+  travel += (targetTravel - travel) * ease;
   cameraY += (targetY - cameraY) * ease;
-  yaw += (targetYaw - yaw) * ease;
-  pitch += (targetPitch - pitch) * ease;
-  winterWorld.style.setProperty('--camera-z', `${cameraZ.toFixed(1)}px`);
-  winterWorld.style.setProperty('--camera-x', `${cameraX.toFixed(1)}px`);
-  winterWorld.style.setProperty('--camera-y', `${cameraY.toFixed(1)}px`);
-  winterWorld.style.setProperty('--camera-yaw', `${yaw.toFixed(2)}deg`);
-  winterWorld.style.setProperty('--camera-pitch', `${pitch.toFixed(2)}deg`);
-  winterPanels.forEach((panel, index) => {
-    const panelDepth = firstPanelDepth + panelStep * index;
-    panel.style.visibility = cameraZ > panelDepth + 200 ? 'hidden' : 'visible';
-  });
-  const currentPanel = cameraZ < panelStep ? 1
-    : cameraZ < panelStep * 2 ? 2
-      : cameraZ < finalPanelDepth - 5 ? 3 : 4;
-  winterProgress.textContent = String(currentPanel).padStart(2, '0');
+  const progress = maxTravel ? travel / maxTravel : 0;
+  const walkBob = Math.sin(time / 390) * (0.65 + progress * 0.55);
+  const scale = 1 + progress * 0.045;
+  winterWorld.style.setProperty('--camera-x', `${(-travel).toFixed(1)}px`);
+  winterWorld.style.setProperty('--camera-y', `${(cameraY + walkBob).toFixed(1)}px`);
+  winterWorld.style.setProperty('--camera-scale', scale.toFixed(4));
+  winterProgress.textContent = String(Math.min(4, Math.floor(progress * 4) + 1)).padStart(2, '0');
   requestAnimationFrame(animateJourney);
 }
 requestAnimationFrame(animateJourney);
