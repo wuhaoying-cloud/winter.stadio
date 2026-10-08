@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#211b21">
+  <title>winter studio</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="site-shell">
+    <section class="page home active" id="home" aria-label="winter studio 主页">
+      <div class="canvas home-canvas">
+        <img class="canvas-art" src="home-art.jpeg" alt="winter studio主页：粉色背景与三面金色镜框">
+        <a class="mirror-hit official-hit" href="#official" data-page="official" aria-label="打开 aespa official"></a>
+        <a class="mirror-hit winter-hit" href="#winter" data-page="winter" aria-label="WINTER 김민정 页面待设计"></a>
+        <a class="mirror-hit fans-hit" href="#fans" data-page="fans" aria-label="Fan Archive 页面待设计"></a>
+        <a class="entry-hit official-label" href="#official" data-page="official" aria-label="打开 aespa official"></a>
+        <a class="entry-hit winter-label" href="#winter" data-page="winter" aria-label="WINTER 김민정 页面待设计"></a>
+        <a class="entry-hit fans-label" href="#fans" data-page="fans" aria-label="Fan Archive 页面待设计"></a>
+      </div>
+    </section>
+
+    <section class="page official-page" id="official" hidden aria-label="aespa 官方账号">
+      <div class="canvas official-canvas">
+        <img class="canvas-art" src="official-art.jpeg" alt="aespa 官方账号入口：WB、SF、INS、YT、X、TT、WVS">
+        <button class="official-back" type="button" aria-label="返回主页">←</button>
+        <nav class="social-links" aria-label="aespa 官方账号">
+          <a class="social-hit wb" href="https://weibo.com/u/7479199632" target="_blank" rel="noopener noreferrer" aria-label="WB：微博"></a>
+          <a class="social-hit sf" href="https://open.spotify.com/artist/6YVMFz59CuY7ngCxTxjpxE" target="_blank" rel="noopener noreferrer" aria-label="SF：Spotify"></a>
+          <a class="social-hit ins" href="https://www.instagram.com/aespa_official/" target="_blank" rel="noopener noreferrer" aria-label="INS：Instagram"></a>
+          <a class="social-hit yt" href="https://www.youtube.com/c/aespa/videos" target="_blank" rel="noopener noreferrer" aria-label="YT：YouTube"></a>
+          <a class="social-hit x-account" href="https://x.com/aespa_official" target="_blank" rel="noopener noreferrer" aria-label="X：Twitter"></a>
+          <a class="social-hit tt" href="https://www.tiktok.com/@aespa_official" target="_blank" rel="noopener noreferrer" aria-label="TT：TikTok"></a>
+          <a class="social-hit wvs" href="https://weverse.io/aespa/highlight" target="_blank" rel="noopener noreferrer" aria-label="WVS：Weverse"></a>
+        </nav>
+      </div>
+    </section>
+
+    <div class="pending-note" id="pending-note" role="status" aria-live="polite" hidden>
+      <div class="pending-card">
+        <button class="pending-close" type="button" aria-label="关闭">×</button>
+        <span class="pending-star">✧</span>
+        <p id="pending-message"></p>
+      </div>
+    </div>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>
