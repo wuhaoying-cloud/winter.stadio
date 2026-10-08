@@ -59,7 +59,8 @@ document.addEventListener('keydown', event => {
 
 const panelStep = 1300;
 const firstPanelDepth = 520;
-const maxTravel = firstPanelDepth + panelStep * 3;
+const finalPanelDepth = firstPanelDepth + panelStep * 3 + 150;
+const maxTravel = finalPanelDepth;
 let targetZ = 0;
 let cameraZ = 0;
 let targetX = 0;
@@ -140,7 +141,10 @@ function animateJourney(time) {
   winterWorld.style.setProperty('--camera-y', `${cameraY.toFixed(1)}px`);
   winterWorld.style.setProperty('--camera-yaw', `${yaw.toFixed(2)}deg`);
   winterWorld.style.setProperty('--camera-pitch', `${pitch.toFixed(2)}deg`);
-  winterProgress.textContent = String(Math.min(4, Math.floor(Math.max(0, cameraZ - firstPanelDepth) / panelStep) + 1)).padStart(2, '0');
+  const currentPanel = cameraZ < firstPanelDepth + panelStep ? 1
+    : cameraZ < firstPanelDepth + panelStep * 2 ? 2
+      : cameraZ < finalPanelDepth ? 3 : 4;
+  winterProgress.textContent = String(currentPanel).padStart(2, '0');
   requestAnimationFrame(animateJourney);
 }
 requestAnimationFrame(animateJourney);
