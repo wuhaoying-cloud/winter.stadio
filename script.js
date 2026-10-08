@@ -4,6 +4,7 @@ const winter = document.querySelector('#winter');
 const winterStage = document.querySelector('#winter-stage');
 const winterWorld = document.querySelector('#winter-world');
 const winterProgress = document.querySelector('#winter-progress');
+const winterPanels = [...winterWorld.querySelectorAll('.winter-panel')];
 const pending = document.querySelector('#pending-note');
 const pendingMessage = document.querySelector('#pending-message');
 
@@ -141,6 +142,10 @@ function animateJourney(time) {
   winterWorld.style.setProperty('--camera-y', `${cameraY.toFixed(1)}px`);
   winterWorld.style.setProperty('--camera-yaw', `${yaw.toFixed(2)}deg`);
   winterWorld.style.setProperty('--camera-pitch', `${pitch.toFixed(2)}deg`);
+  winterPanels.forEach((panel, index) => {
+    const panelDepth = firstPanelDepth + panelStep * index;
+    panel.style.visibility = cameraZ > panelDepth + 200 ? 'hidden' : 'visible';
+  });
   const currentPanel = cameraZ < panelStep ? 1
     : cameraZ < panelStep * 2 ? 2
       : cameraZ < finalPanelDepth ? 3 : 4;
