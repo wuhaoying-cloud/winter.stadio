@@ -37,6 +37,28 @@
       </div>
     </section>
 
+    <section class="page winter-page" id="winter" hidden aria-label="WINTER 镜廊">
+      <div class="winter-stage" id="winter-stage" tabindex="0" role="application" aria-label="移动光标或滚动，向前探索 WINTER 镜廊">
+        <button class="winter-back" type="button" aria-label="返回主页">←</button>
+        <div class="winter-world" id="winter-world" aria-hidden="true">
+          <figure class="winter-panel" style="--depth: -520px; --panel-tilt: -1deg; --slice: 0%"></figure>
+          <figure class="winter-panel" style="--depth: -1820px; --panel-tilt: 1.2deg; --slice: 33.333%"></figure>
+          <figure class="winter-panel" style="--depth: -3120px; --panel-tilt: -0.8deg; --slice: 66.667%"></figure>
+          <figure class="winter-panel" style="--depth: -4420px; --panel-tilt: 1deg; --slice: 100%"></figure>
+        </div>
+        <div class="winter-vines" aria-hidden="true">
+          <svg viewBox="0 0 1200 700" preserveAspectRatio="none">
+            <path d="M-40 525 C160 370 215 580 360 420 S610 340 690 470 S930 565 1240 280" />
+            <path d="M110 590 C245 530 245 430 350 388 M665 452 C780 330 845 355 950 420" />
+          </svg>
+        </div>
+        <div class="dandelion-field" id="dandelion-field" aria-hidden="true"></div>
+        <div class="winter-vignette" aria-hidden="true"></div>
+        <p class="winter-hint">移动光标向前探索 · 滚动也可推进</p>
+        <div class="winter-progress" aria-live="polite"><span id="winter-progress">01</span><i></i>04</div>
+      </div>
+    </section>
+
     <div class="pending-note" id="pending-note" role="status" aria-live="polite" hidden>
       <div class="pending-card">
         <button class="pending-close" type="button" aria-label="关闭">×</button>
