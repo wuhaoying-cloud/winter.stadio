@@ -136,7 +136,7 @@ function animateJourney(time) {
   winterWorld.style.setProperty('--camera-x', `${(-travel).toFixed(1)}px`);
   winterWorld.style.setProperty('--camera-y', `${(cameraY + walkBob).toFixed(1)}px`);
   winterWorld.style.setProperty('--camera-scale', scale.toFixed(4));
-  winterProgress.textContent = String(Math.min(4, Math.floor(progress * 4) + 1)).padStart(2, '0');
+  winterProgress.textContent = String(Math.min(2, Math.floor(progress * 2) + 1)).padStart(2, '0');
   requestAnimationFrame(animateJourney);
 }
 requestAnimationFrame(animateJourney);
