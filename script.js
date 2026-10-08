@@ -148,7 +148,7 @@ function animateJourney(time) {
   });
   const currentPanel = cameraZ < panelStep ? 1
     : cameraZ < panelStep * 2 ? 2
-      : cameraZ < finalPanelDepth ? 3 : 4;
+      : cameraZ < finalPanelDepth - 5 ? 3 : 4;
   winterProgress.textContent = String(currentPanel).padStart(2, '0');
   requestAnimationFrame(animateJourney);
 }
