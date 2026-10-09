@@ -67,7 +67,7 @@ document.addEventListener('keydown', event => {
 const background = new Image();
 background.src = 'winter-background.webp';
 const mirrorData = [
-  { x: 560, z: 350, w: 720, sprite: 'winter-mirror-01.png', hole: [167, 253, 96, 128] },
+  { x: 560, z: 350, w: 720, sprite: 'winter-mirror-01.png', hole: [167, 253, 118, 138] },
   { x: 1620, z: 1000, w: 520, sprite: 'winter-mirror-02.png', hole: [150, 176, 50, 82] },
   { x: 2680, z: 450, w: 700, sprite: 'winter-mirror-03.png', hole: [228, 294, 112, 160] },
   { x: 3760, z: 1150, w: 540, sprite: 'winter-mirror-04.png', hole: [174, 256, 84, 128] }
