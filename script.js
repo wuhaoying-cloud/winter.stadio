@@ -199,9 +199,9 @@ function drawMirror(mirror, image, cameraX, cameraZ, bob) {
   context.ellipse(glassX, glassY, glassRX, glassRY, 0, 0, Math.PI * 2);
   context.clip();
   const glass = context.createLinearGradient(glassX - glassRX, glassY - glassRY, glassX + glassRX, glassY + glassRY);
-  glass.addColorStop(0, 'rgba(255,255,255,.30)');
-  glass.addColorStop(.48, 'rgba(222,207,237,.25)');
-  glass.addColorStop(1, 'rgba(209,193,229,.34)');
+  glass.addColorStop(0, 'rgba(249,239,249,.94)');
+  glass.addColorStop(.48, 'rgba(226,211,239,.91)');
+  glass.addColorStop(1, 'rgba(213,197,230,.94)');
   context.fillStyle = glass;
   context.fillRect(glassX - glassRX, glassY - glassRY, glassRX * 2, glassRY * 2);
   const haze = limit(.08 + (depth + 100) / 1500 * .56, .06, .62);
