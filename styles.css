@@ -72,7 +72,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
   .official-canvas::after { animation-duration: 2.2s, 16s; }
 }
 
-/* One wide artwork plane: moving right through the scene shifts this single image left. */
+/* The mirror corridor is rendered as one canvas so the same scene can use perspective. */
 .winter-page {
   position: fixed;
   z-index: 8;
@@ -90,31 +90,17 @@ button, a { -webkit-tap-highlight-color: transparent; }
   position: absolute;
   inset: 0;
   overflow: hidden;
-  perspective: 1750px;
-  perspective-origin: 48% 52%;
   touch-action: none;
   cursor: crosshair;
   outline: none;
-  background: #f5d8eb;
+  background: #f5d8eb url('winter-background.webp') center / cover no-repeat;
 }
-.winter-world {
+.winter-canvas {
   position: absolute;
-  left: 0;
-  top: 0;
+  inset: 0;
+  width: 100%;
   height: 100%;
-  width: max-content;
-  transform-style: preserve-3d;
-  transform-origin: 50% 50%;
-  transform: translate3d(var(--camera-x, 0px), var(--camera-y, 0px), var(--camera-z, 0px)) rotateY(var(--camera-yaw, 0deg)) scale(var(--camera-scale, 1));
-  will-change: transform;
-}
-.winter-panorama {
-  display: block;
-  height: 100%;
-  width: auto;
-  max-width: none;
-  user-select: none;
-  -webkit-user-drag: none;
+  pointer-events: none;
 }
 .dandelion-field { position: absolute; z-index: 3; inset: 0; overflow: hidden; pointer-events: none; }
 .dandelion-seed {
@@ -178,7 +164,6 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .winter-progress { right: clamp(18px, 3vw, 42px); display: flex; align-items: center; gap: 8px; font-variant-numeric: tabular-nums; }
 .winter-progress i { width: 28px; height: 1px; background: rgba(255,255,255,.6); }
 @media (max-width: 700px) {
-  .winter-stage { perspective: 1400px; }
   .winter-hint { bottom: 16px; }
   .winter-progress { bottom: 42px; right: 18px; }
 }
