@@ -25,6 +25,7 @@ function showWinter() {
   travel = 0;
   targetY = 0;
   cameraY = 0;
+  cameraDepth = 0;
   lastPointerX = null;
   window.location.hash = 'winter';
   measurePanorama();
@@ -69,12 +70,14 @@ let targetTravel = 0;
 let travel = 0;
 let targetY = 0;
 let cameraY = 0;
+let cameraDepth = 0;
 let lastFrame = 0;
 let lastPointerX = null;
 const limit = (value, min, max) => Math.max(min, Math.min(max, value));
 
 function measurePanorama() {
-  maxTravel = Math.max(0, winterPanorama.getBoundingClientRect().width - winterStage.clientWidth);
+  const renderedWidth = winterPanorama.naturalWidth * winterStage.clientHeight / winterPanorama.naturalHeight;
+  maxTravel = Math.max(0, renderedWidth - winterStage.clientWidth);
   targetTravel = limit(targetTravel, 0, maxTravel);
 }
 
@@ -87,7 +90,7 @@ winterStage.addEventListener('pointermove', event => {
   const y = limit((event.clientY - bounds.top) / bounds.height, 0, 1);
   // Rightward hand movement walks the view along this one flat panorama.
   if (lastPointerX !== null) {
-    targetTravel = limit(targetTravel + (event.clientX - lastPointerX) * 2.2, 0, maxTravel);
+    targetTravel = limit(targetTravel + (event.clientX - lastPointerX) * 3.4, 0, maxTravel);
   }
   lastPointerX = event.clientX;
   targetY = (0.5 - y) * 5;
@@ -132,16 +135,21 @@ seedLayout.forEach(([x, y, size, duration, drift, delay]) => {
 function animateJourney(time) {
   const elapsed = lastFrame ? Math.min((time - lastFrame) / 1000, 0.05) : 0.016;
   lastFrame = time;
-  const ease = 1 - Math.exp(-elapsed * 3.8);
+  const ease = 1 - Math.exp(-elapsed * 5.2);
   travel += (targetTravel - travel) * ease;
   cameraY += (targetY - cameraY) * ease;
   const progress = maxTravel ? travel / maxTravel : 0;
-  const walkBob = Math.sin(time / 390) * (0.65 + progress * 0.55);
-  const scale = 1 + progress * 0.045;
+  const depthEase = 1 - Math.exp(-elapsed * 3.4);
+  const forwardDepth = Math.pow(progress, 0.88) * 570;
+  cameraDepth += (forwardDepth - cameraDepth) * depthEase;
+  const walkBob = Math.sin(time / 245) * (1 + progress * 2.2);
+  const scale = 1 + progress * 0.035;
   winterWorld.style.setProperty('--camera-x', `${(-travel).toFixed(1)}px`);
   winterWorld.style.setProperty('--camera-y', `${(cameraY + walkBob).toFixed(1)}px`);
+  winterWorld.style.setProperty('--camera-z', `${cameraDepth.toFixed(1)}px`);
+  winterWorld.style.setProperty('--camera-yaw', `${(-progress * 1.35).toFixed(2)}deg`);
   winterWorld.style.setProperty('--camera-scale', scale.toFixed(4));
-  winterProgress.textContent = String(Math.min(2, Math.floor(progress * 2) + 1)).padStart(2, '0');
+  winterProgress.textContent = String(Math.min(4, Math.floor(progress * 4) + 1)).padStart(2, '0');
   requestAnimationFrame(animateJourney);
 }
 requestAnimationFrame(animateJourney);
